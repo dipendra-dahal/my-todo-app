@@ -1,21 +1,46 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
+import axios from 'axios';
+import Row from './components/Row';
+
+const url = 'http://localhost:3001'
 
 function App() {
   const [task, setTask] = useState('');
   const [tasks, setTasks] = useState([]);
 
-  const addTask = () => {
-    if (task.trim()) {
-      setTasks([...tasks, task]);
-      setTask('');
-    }
-  };
 
-  const deleteTask = (deleted) => {
-    const withoutRemoved = tasks.filter((item) => item !== deleted);
-    setTasks(withoutRemoved);
-  };
+  useEffect(() => {
+    axios.get(url)
+    .then(response => {
+      setTasks(response.data)
+    }).catch(error => {
+      alert(error.response.data.error ? error.response.data.error : error)
+    })
+  }, [])
+
+  const addTask = () => {
+    axios.post(url + '/create',{
+      description: task
+    })
+    .then(response => {
+      setTasks([...tasks,{id: response.data.id,description: task}])
+      setTask('')
+    }).catch(error => {
+      alert(error.response.data.error ? error.response.data.error : error)
+    })
+    }
+
+
+  const deleteTask = (id) => {
+   axios.delete(url + '/delete/' + id)
+   .then(response => {
+    const withoutRemoved = tasks.filter((item) => item.id !== id)
+    setTasks(withoutRemoved)
+   }).catch(error => {
+    alert(error.response.data.error ? error.response.data.error : error)
+   })
+  }
 
   return (
     <div id="container">
@@ -34,14 +59,11 @@ function App() {
         />
       </form>
       <ul>
-        {tasks.map((item, index) => (
-          <li key={index}>
-            {item}
-            <button className="delete-button" onClick={() => deleteTask(item)}>
-              Delete
-            </button>
-          </li>
-        ))}
+        {
+        tasks.map(item => (
+          <Row key={item.id} item={item} deleteTask={deleteTask}/>
+        ))
+        }
       </ul>
     </div>
   );
