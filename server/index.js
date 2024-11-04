@@ -1,7 +1,8 @@
 import express from 'express'
 import cors from 'cors'
 import pkg from 'pg'
-const port = 3001;
+
+const port = 3001
 const { Pool } = pkg
 
 const app = express()
@@ -15,19 +16,19 @@ app.use(express.urlencoded({extended: false}))
 app.get('/',(req,res) => {
 const pool = openDb()
 
-pool.query('select * from task',(error, result)=> {
-    if (error) {
-        return res.status(500).json({error: error.message})
-    }
-    res.status(200).json(result.rows)
-}) 
+    pool.query('select * from task',(error, result)=> {
+        if (error) {
+            return res.status(500).json({error: error.message})
+        }
+        return res.status(200).json(result.rows)
+    }) 
 })
 app.post('/create',(req,res) => {
     const pool = openDb()
 
-    pool.querry('insert into task (description) values ($1) returning *',
+    pool.query('insert into task (description) values ($1) returning *',
         [req.body.description],
-        (eroor,result) => {
+        (error,result) => {
             if (error) {
                 return res.status(500).json({error: error.message})
             }
@@ -37,9 +38,9 @@ app.post('/create',(req,res) => {
 })
 
 app.delete('/delete/:id',(req,res) => {
-    const pool = opebDb()
+    const pool = openDb()
     const id = parseInt(req.params.id)
-    pool.querry('delete from task where id =$1',
+    pool.query('delete from task where id =$1',
         [id],
         (error,result) => {
             if (error) {
@@ -59,37 +60,6 @@ const openDb = () => {
     })
     return pool
 }
-// app.get('/home',(req,res) => {
-//     res.send('this is a home')
-// })
-// app.get('/test',(req,res) => {
-//     res.status(200).json({test:'this is a test'})
-// })
-// app.get('/result',(req,res) => {
-//     res.status(200).json({result:'this is a result'})
-// })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 app.listen(port)
