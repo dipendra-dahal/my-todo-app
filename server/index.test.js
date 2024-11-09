@@ -49,26 +49,26 @@ describe ('POST task', () => {
         });
         const data = await response.json();
     
-        expect(response.status).to.equal(401);  // Update expected status code to 401
-        expect(data).to.be.an('object').that.has.all.keys('message');  // Adjust to match response structure
+        expect(response.status).to.equal(401);  
+        expect(data).to.be.an('object').that.has.all.keys('message');  
     });
     
 })
 describe('DELETE task', () => {
-    const email = 'registe@gmail.com';
+    const email = 'regi7ster63@gmail.com';
     const password = 'password';
-    let token; // Define token at a higher scope
+    let token; 
 
     before(async () => {
-        await insertTestUser(email, password);  // Insert a user for delete tests
-        token = `Bearer ${getToken(email)}`;    // Initialize token after inserting the user
+        await insertTestUser(email, password);  
+        token = `Bearer ${getToken(email)}`;    
     });
 
     it('should delete a task', async () => {
-        const response = await fetch('http://localhost:3001/delete/3', {
+        const response = await fetch('http://localhost:3001/delete/11', {
             method: 'DELETE',
             headers: {
-                'Authorization': token  // Use the token defined above
+                'Authorization': token  
             }
         });
         const data = await response.json();
@@ -81,20 +81,20 @@ describe('DELETE task', () => {
         const response = await fetch('http://localhost:3001/delete/200', {
             method: 'DELETE',
             headers: {
-                'Authorization': token  // Use the token defined above
+                'Authorization': token  
             }
         });
         const data = await response.json();
     
         expect(response.status).to.equal(404);  
-        expect(data).to.be.an('object').that.has.all.keys('error');  // Check for 'error' key instead of 'message'
+        expect(data).to.be.an('object').that.has.all.keys('error'); 
     });
     
 });
 
 
 describe('POST register', () => {
-    const email = `register${Math.random().toString().slice(2)}@gmail.com`;
+    const email = `register12@gmail.com`;
 
     const password = 'password'
     it ('should register a user with valid email and password', async () => {
@@ -115,7 +115,7 @@ describe('POST register', () => {
 
 //TEST FOE LOGIN
 describe('POST login', () => {
-    const email = 'register9276291265284815@gmail.com'
+    const email = 'register1@gmail.com'
     const password = 'password'
     insertTestUser(email, password)
     it ('should login a user with valid email and password', async () => {
